@@ -1,5 +1,11 @@
 # NightTraders
 
+## Features
+
+- View current stock prices and trends in the market
+- Easy access to investment analysis using proven methods
+- Bookmark stocks for convenient viewing
+
 ## Mission and Vision Statement
 
 - Mission Statement:
@@ -10,6 +16,6 @@
 ## Technologies Used
 
 - Frontend:
-  ReactJS, Figma
+  ReactJS
 - Backend:
-  PHP, MySQL for database
+  PHP, MySQL 
