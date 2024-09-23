@@ -1,9 +1,13 @@
 # NightTraders
 
+## Overview
+
+NightTraders is a webapp where users can view current stock prices and trends in the market. The app offers easy access to investment analysis using proven methods like Monte Carlo Analysis and more.
+
 ## Features
 
-- View current stock prices and trends in the market
-- Easy access to investment analysis using proven methods
+- View real time prices and trends in the stock market
+- Create an account for a personalized experience
 - Bookmark stocks for convenient viewing
 
 ## Mission and Vision Statement
@@ -18,4 +22,4 @@
 - Frontend:
   ReactJS
 - Backend:
-  PHP, MySQL 
+  PHP, MySQL
