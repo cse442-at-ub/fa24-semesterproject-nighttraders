@@ -21,7 +21,6 @@ if (isset($_POST["login"])) {
     $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
     if ($user) {
         if (password_verify($password, $user["password"])) {
-            session_start();
             $_SESSION["user"] = "yes";
             // redirect to dashboard
             // header("Location: .php");
