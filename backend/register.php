@@ -42,7 +42,7 @@ if ($rowCount>0) {
     die(json_encode(['error' => 'The email is already registered']));
 }
 // check if username is already registered
-$sql = "SELECT * FROM users WHERE usernamne = '$username'";
+$sql = "SELECT * FROM users WHERE username = '$username'";
 $result = mysqli_query($conn, $sql);
 $rowCount = mysqli_num_rows($result);
 if ($rowCount>0) {
@@ -52,7 +52,7 @@ if ($rowCount>0) {
 $sql = "INSERT INTO users (username, passwordHash, birthdate, email) VALUES (?, ?, ?, ? )";
 $stmt = $conn->prepare($sql);
 if ($stmt) {
-    $stmt->bind_param("ssss", $username, $hashed_password, $birthdate, $email);
+    $stmt->bind_param("ssss", $username, $hashed, $birthdate, $email);
     $stmt->execute();
 }else{
     die("Something went wrong");
