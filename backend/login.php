@@ -24,7 +24,7 @@ if (isset($_POST["login"])) {
             $_SESSION["user"] = "yes";
             // redirect to dashboard
             // header("Location: .php");
-            die();
+            die('Login Successful');
         }else{
             die(json_encode(['error' => 'Invalid credentials.']));
         }
