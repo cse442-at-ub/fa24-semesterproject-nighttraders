@@ -57,6 +57,7 @@ $stmt = $conn->prepare($sql);
 if ($stmt) {
     $stmt->bind_param("ssss", $username, $passwordHash, $birthdate, $email); // pass the hashed password into the "password" column
     $stmt->execute();
+    die("Successfully Registered");
 }else{
     die("Something went wrong");
 }
