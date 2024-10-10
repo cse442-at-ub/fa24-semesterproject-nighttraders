@@ -17,6 +17,7 @@ if(
     $_SERVER['PHP_SELF']);
     }
 
+// if user is already logged in
 if (isset($_SESSION["user"])) {
     // redirect to dashboard
     // header("Location: .php");
@@ -34,10 +35,8 @@ if (isset($_POST["login"])) {
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $result = mysqli_query($conn, $sql);
     $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    $hashPassword = password_hash($password,PASSWORD_BCRYPT);
     if ($user) {
-        if (password_verify($hashPassword, $user["password"])) {
-            session_start();
+        if (password_verify($password, $user["password"])) {
             $_SESSION["user"] = $user["username"];       
             // redirect to dashboard
             // header("Location: .php");
