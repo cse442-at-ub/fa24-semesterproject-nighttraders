@@ -63,7 +63,7 @@ if (isset($_POST["submit"])) {
     $sql = "INSERT INTO users (username, password, email, birthday) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if ($stmt) {
-        $stmt->bind_param("ssss", $username, $hashedPassword, $email, $birthday); 
+        $stmt->bind_param("ssss", $username, $passwordHash, $email, $birthday); 
         $stmt->execute();
         die(json_encode(["code" => 200, "error" => "Successfully registered"]));
     }else{
