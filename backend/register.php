@@ -59,26 +59,16 @@ if (isset($_POST["submit"])) {
         die(json_encode(['error' => 'The username is already registered']));
     }
 
-    $sql = "INSERT INTO users (username, passwordHash, birthdate, email) VALUES (?, ?, ?, ? )";
+    // Insert the user into the database
+    $sql = "INSERT INTO users (username, password, email, birthday) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if ($stmt) {
-        $stmt->bind_param("ssss", $username, $hashed, $birthdate, $email);
+        $stmt->bind_param("ssss", $username, $hashedPassword, $email, $birthday); 
         $stmt->execute();
+        die(json_encode(["code" => 200, "error" => "Successfully registered"]));
     }else{
-        die("Something went wrong");
+        die(json_encode(["code" => 401, "error" => "Register unsuccessful"]));
     }
+    $conn->close();
 }
-// Insert the user into the database
-$sql = "INSERT INTO users (username, password, birthdate, email) VALUES (?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-if ($stmt) {
-    $stmt->bind_param("ssss", $username, $passwordHash, $birthdate, $email); 
-    $stmt->execute();
-    die("Successfully Registered");
-}else{
-    die("Something went wrong");
-}
-
-$conn->close();
 ?>
-
