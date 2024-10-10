@@ -68,6 +68,17 @@ if (isset($_POST["submit"])) {
         die("Something went wrong");
     }
 }
+// Insert the user into the database
+$sql = "INSERT INTO users (username, password, birthdate, email) VALUES (?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+if ($stmt) {
+    $stmt->bind_param("ssss", $username, $passwordHash, $birthdate, $email); 
+    $stmt->execute();
+    die("Successfully Registered");
+}else{
+    die("Something went wrong");
+}
+
 $conn->close();
 ?>
 
