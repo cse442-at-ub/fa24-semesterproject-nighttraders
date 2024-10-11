@@ -10,13 +10,45 @@ import {
   Grid,
 } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate(); // useNavigate for redirection after successful login
 
-  const handleLogin = () => {};
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://your-api-endpoint/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Login successful!', data);
+
+        // Optionally save the token or user info (e.g., localStorage or context)
+        localStorage.setItem('token', data.token); // Assuming a token is returned
+
+        // Redirect to a different page after successful login
+        navigate('/dashboard');
+      } else {
+        // Handle login failure (e.g., incorrect credentials)
+        setErrorMessage('Invalid email or password. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setErrorMessage('Something went wrong. Please try again later.');
+    }
+  };
 
   return (
     <>
@@ -56,10 +88,14 @@ const Login = () => {
               label="Password"
               type="password"
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              onChange={(e) => setPassword(e.target.value)}
             />
+
+            {errorMessage && (
+              <Typography color="error" variant="body2">
+                {errorMessage}
+              </Typography>
+            )}
 
             <Button
               fullWidth
