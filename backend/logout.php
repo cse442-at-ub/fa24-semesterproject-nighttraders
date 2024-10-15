@@ -1,14 +1,13 @@
 <?php
-// Enable CORS for local testing if needed
-header('Access-Control-Allow-Origin: http://localhost:3000');
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Allow-Headers: Content-Type");
+// backend/logout.php
+
+session_start();
+session_destroy();
+
+// header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
+header('Access-Control-Allow-Credentials: true');
 header("Content-Type: application/json");
 
-// Start the session
-session_start();
-
-// Unset all session variables
-$_SESSION = [];
-
-// Destroy the session
+echo json_encode(['code' => 200, 'message' => 'Logged out successfully']);
+?>
