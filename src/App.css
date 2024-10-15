@@ -1,40 +1,60 @@
 .App {
-  height: 100vh;
-  background-color: #252525; /* Gray background */
-  margin: 0;
-  padding: 0;
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.top-bar {
-  background-color: #79747E; /* Black background */
-  color: white;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between; /* Align title and button */
   align-items: center;
-}
-
-.logout-button {
-  background-color: #f44336; /* Red background */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.logout-button:hover {
-  background-color: #d32f2f; /* Darker red on hover */
-}
-
-.content {
-  flex: 1;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  color: #00ff00;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+.css-16xl4zq-MuiTypography-root {
+  margin: 0;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+  color: white;
+}
+
+.register{
+  background-color:#252525;
+  height:120vh;
+}
+.css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input:invalid {
+  box-shadow: none;
+  background-color: white;
+}
+.css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input:valid {
+  box-shadow: none;
+  background-color: white;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
