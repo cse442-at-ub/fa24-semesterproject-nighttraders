@@ -34,7 +34,7 @@ const Register = () => {
       formData.append("birthday", birthdate);
 
       const response = await fetch(
-        "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442e/register.php",
+        "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442e/backend/register.php",
         {
           method: "POST",
           body: formData,
