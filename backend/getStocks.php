@@ -33,7 +33,7 @@ function fetchStock($symbol) {
     return $overviewData;
 }
 
-function insertStock($overviewData,) {
+function insertStock($overviewData) {
     global $conn;
     
     $sql = "INSERT INTO stockInfo 
