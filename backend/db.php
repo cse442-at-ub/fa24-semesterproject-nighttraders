@@ -1,16 +1,11 @@
 <?php
-
-$servername = "localhost";
-$username = "dlincogn";
-$password = "50503958";
-$dbname = "cse442_2024_fall_team_e_db";
+include_once('config.php');
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli(SERVER_NAME, DB_USER, DB_PASS, DB_NAME);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-//echo "Connection successful";
 ?>
