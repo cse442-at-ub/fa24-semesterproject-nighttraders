@@ -1,7 +1,5 @@
 <?php
-// backend/register.php
 
-// header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Methods: POST, GET");
@@ -10,15 +8,25 @@ header("Content-Type: application/json");
 
 include_once('db.php');
 
+if(
+    (!isset($_SERVER['HTTPS'])||
+    ($_SERVER['HTTPS']!='on')))
+    {
+    header('Location: '.
+    'https://'.
+    $_SERVER['SERVER_NAME'].
+    $_SERVER['PHP_SELF']);
+    }
+
 // Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die(json_encode(['error' => 'Invalid request method']));
 }
 
 // extract data from input
-$username = $_POST["username"] ?? ''; // up to 100 characters long
-$password = $_POST["password"] ?? '';  // up to 100 characters long
-$birthdate = $_POST["birthday"] ?? ''; // up to 150 characters long 
+$username = $_POST["username"] ?? '';
+$password = $_POST["password"] ?? '';  
+$birthdate = $_POST["birthday"] ?? ''; 
 $email = $_POST["email"] ?? '';
 $passwordRepeat = $_POST["repeat_password"] ?? '';
 $passwordHash = password_hash($password, PASSWORD_BCRYPT); // create hashed password
@@ -43,7 +51,6 @@ if ($password !== $passwordRepeat) {
     die(json_encode(['error' => 'Passwords do not match']));
 }
 
-// Prepare statements to prevent SQL injection
 // check if email is already registered
 $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
