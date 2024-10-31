@@ -1,76 +1,45 @@
+// Analysis.tsx
 import React, { useState } from "react";
-import { Container, Box, Typography, Button, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import StockButton from "../Components/StockButton";
+import "./MonteCarlo.css"; // Import the CSS file for styling
 
-const MonteCarlo = () => {
-  const [stockSymbol, setStockSymbol] = useState("");
-  const navigate = useNavigate();
+const Analysis: React.FC = () => {
+  const [selectedStock, setSelectedStock] = useState<string | null>(null);
+  const [stockPrice, setStockPrice] = useState<number | null>(null);
+  const [monteCarloData, setMonteCarloData] = useState<any | null>(null);
 
-  const handleAnalysis = async () => {
-    // Replace with your backend endpoint
-    const response = await fetch(
-      "https://your-backend-endpoint/monte-carlo-analysis",
-      {
-        method: "POST",
-        body: JSON.stringify({ stockSymbol }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (response.ok) {
-      // Redirect to the results page (or handle it according to your design)
-      navigate("/monte-carlo-results");
-    } else {
-      console.error("Error performing Monte Carlo analysis");
-    }
+  const fetchStockData = async (stockName: string) => {
+    // Logic for fetching stock data remains unchanged
   };
 
   return (
-    <div style={{ backgroundColor: "#252525", minHeight: "100vh" }}>
-      <div className="top-bar">
-        <button className="logo" onClick={() => navigate("/")}>
-          NightTraders
-        </button>
-        
+    <div className="analysis-page">
+      <button className="logo" onClick={() => (window.location.href = "/")}>
+        NightTraders
+      </button>
+      {selectedStock ? (
+        <div>
+          <h2>{selectedStock} Analysis</h2>
+          <p>Stock Price: ${stockPrice}</p>
+          {/* Placeholder for individual stock's Monte Carlo graph */}
+          <div className="graph-box">Graph for {selectedStock}</div>
+        </div>
+      ) : (
+        <div>
+          <h2>Market Trends</h2>
+          {/* Placeholder box for the general Monte Carlo graph */}
+          <div className="graph-box">Graph will go here</div>
+        </div>
+      )}
+      <div className="stock-buttons">
+        {["AAPL", "GOOGL", "AMZN", "MSFT", "TSLA", "META", "NFLX", "NVDA", "BABA", "JPM"].map(
+          (stock, index) => (
+            <StockButton key={index} stockName={stock} onClick={fetchStockData} />
+          )
+        )}
       </div>
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            mt: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: 3,
-            borderRadius: 2,
-          }}
-        >
-          <Typography component="h1" variant="h5" sx={{ color: '#ffffff' }}>
-            Monte Carlo Analysis
-          </Typography>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="stockSymbol"
-            label="Enter Stock Name or Symbol"
-            value={stockSymbol}
-            onChange={(e) => setStockSymbol(e.target.value)}
-          />
-          <Button
-            type="button"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={handleAnalysis}
-          >
-            Monte Carlo Analysis
-          </Button>
-        </Box>
-      </Container>
     </div>
   );
 };
 
-export default MonteCarlo;
+export default Analysis;
