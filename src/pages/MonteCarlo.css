@@ -1,0 +1,25 @@
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1e1e1e; /* Darker background for the top bar */
+    padding: 10px 20px;
+  }
+  
+  .top-bar .logo {
+    color: #ffffff; /* White color for the logo */
+    font-size: 24px; /* Logo size */
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .top-bar .register-button,
+  .top-bar .signin-button {
+    color: #ffffff; /* White color for buttons */
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px; /* Space between buttons */
+  }
+  
