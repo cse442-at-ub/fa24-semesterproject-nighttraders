@@ -1,8 +1,10 @@
 <?php
 // backend/register.php
+include_once('config.php'); // Add this line first
+
 
 // header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
+header('Access-Control-Allow-Origin: ' . FRONTEND_URL);
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
