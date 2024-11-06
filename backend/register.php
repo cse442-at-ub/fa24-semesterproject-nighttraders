@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
 header('Access-Control-Allow-Credentials: true');
@@ -24,6 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // extract data from input
+$username = htmlspecialchars($_POST["username"] ?? '');
+$password = htmlspecialchars($_POST["password"] ?? '');  
+$birthdate = htmlspecialchars($_POST["birthday"] ?? ''); 
+$email = htmlspecialchars($_POST["email"] ?? '');
+$passwordRepeat = htmlspecialchars($_POST["repeat_password"] ?? '');
+
 $username = $_POST["username"] ?? '';
 $password = $_POST["password"] ?? '';  
 $birthdate = $_POST["birthday"] ?? ''; 

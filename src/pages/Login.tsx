@@ -1,3 +1,6 @@
+// frontend/pages/Login.tsx
+
+import { config } from '../config';
 import React, { useState } from "react";
 import { LockOutlined } from "@mui/icons-material";
 import {
@@ -33,7 +36,7 @@ const Login = () => {
       formData.append("login", "true");
 
       const response = await fetch(
-        "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442e/backend/login.php",
+        `${config.backendUrl}/login.php`,
         {
           method: "POST",
           body: formData,
@@ -43,7 +46,7 @@ const Login = () => {
 
       const data = await response.json();
 
-      if (data.code === 200) {
+      if (response.ok && data.code === 200) { // Added response.ok check
         console.log("Login successful!", data);
         navigate("/dashboard");
       } else {
