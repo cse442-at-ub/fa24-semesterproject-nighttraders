@@ -89,31 +89,14 @@ const StockDetails: React.FC = () => {
             } else {
                 // Prepare Monte Carlo chart data
                 const scenarios = data.monteCarloResults.scenarios;
-                const labels = Array.from({ length: scenarios.worstCase.length }, (_, i) => `Day ${i + 1}`);
-                const datasets = [
-                    {
-                        label: 'Worst Case',
-                        data: scenarios.worstCase,
-                        borderColor: 'red',
-                        fill: false,
-                        borderWidth: 1,
-                    },
-                    {
-                        label: 'Average Case',
-                        data: scenarios.medianCase,
-                        borderColor: 'gray',
-                        fill: false,
-                        borderWidth: 1,
-                    },
-                    {
-                        label: 'Best Case',
-                        data: scenarios.bestCase,
-                        borderColor: 'green',
-                        fill: false,
-                        borderWidth: 1,
-                    },
-                ];
-
+                const labels = Array.from({ length: scenarios[0].length }, (_, i) => `Day ${i}`);
+                const datasets = scenarios.slice(0, 10).map((scenario: number[], index: number) => ({
+                    label: `Simulation ${index + 1}`,
+                    data: scenario,
+                    borderColor: getRandomColor(),
+                    fill: false,
+                    borderWidth: 1,
+                }));
                 setMonteCarloData({
                     labels,
                     datasets,
@@ -189,3 +172,4 @@ const StockDetails: React.FC = () => {
 };
 
 export default StockDetails;
+
