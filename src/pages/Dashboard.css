@@ -1,40 +1,30 @@
+/* src/pages/Dashboard.css */
 .App {
-  height: 100vh;
-  background-color: #252525; /* Gray background */
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
+  background-color: #252525;
 }
 
 .top-bar {
-  background-color: #79747E; /* Black background */
+  background-color: #79747E;
   color: white;
-  padding: 20px;
+  padding: 1rem;
   display: flex;
-  justify-content: space-between; /* Align title and button */
+  justify-content: space-between;
   align-items: center;
 }
 
-.logout-button {
-  background-color: #f44336; /* Red background */
+.logout-button,
+.back-button {
+  background-color: #f44336;
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
-  border-radius: 5px;
+  font-size: 1rem;
 }
 
-.logout-button:hover {
-  background-color: #d32f2f; /* Darker red on hover */
-}
-
-.content {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  color: #00ff00;
+.logout-button:hover,
+.back-button:hover {
+  background-color: #d32f2f;
 }
