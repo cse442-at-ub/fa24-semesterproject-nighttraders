@@ -1,6 +1,6 @@
 <?php
-
 session_start();
+
 include_once('db.php');
 
 header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
@@ -25,11 +25,14 @@ if (isset($_SESSION["user"])) {
 }
 
 if (isset($_POST["login"])) {
-    if (!isset($_POST["email"]) || empty($_POST["email"])) {
+
+    $email = htmlspecialchars($_POST["email"] ?? '');
+    $password = htmlspecialchars($_POST["password"] ?? '');
+    
+    if (!isset($email) || empty($email)) {
         die(json_encode(['error' => 'Email is required']));
     }
-    $email = $_POST["email"];
-    $password = $_POST["password"];
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die(json_encode(['error' => 'Invalid email format']));
     }
