@@ -42,7 +42,12 @@ $password = htmlspecialchars($_POST["password"] ?? '');
 $birthdate = htmlspecialchars($_POST["birthday"] ?? ''); 
 $email = htmlspecialchars($_POST["email"] ?? '');
 $passwordRepeat = htmlspecialchars($_POST["repeat_password"] ?? '');
-    
+
+$username = $_POST["username"] ?? '';
+$password = $_POST["password"] ?? '';  
+$birthdate = $_POST["birthday"] ?? ''; 
+$email = $_POST["email"] ?? '';
+$passwordRepeat = $_POST["repeat_password"] ?? '';
 $passwordHash = password_hash($password, PASSWORD_BCRYPT); // create hashed password
 
 if (empty($username) OR empty($email) OR empty($password) OR empty($passwordRepeat)) {

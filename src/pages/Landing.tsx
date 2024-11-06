@@ -1,3 +1,5 @@
+// frontend/pages/Landing.tsx
+
 import React from "react";
 import "./Landing.css";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +23,7 @@ const Landing: React.FC = () => {
         </button>
       </div>
       <img
-        src={require("./How-to-trade-stocks.png")}
+        src={require("./How-to-trade-stocks.png")} // Ensure the image path is correct
         alt="Stock Market"
         className="main-image"
       />

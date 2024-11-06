@@ -1,3 +1,6 @@
+// frontend/pages/Register.tsx
+
+import { config } from '../config';
 import React, { useState } from "react";
 import {
   Avatar,
@@ -34,19 +37,18 @@ const Register = () => {
       formData.append("birthday", birthdate);
 
       const response = await fetch(
-        "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442e/backend/register.php",
+        `${config.backendUrl}/register.php`,
         {
           method: "POST",
           body: formData,
-          credentials: "include", // Ensures cookies are sent
+          credentials: "include",
         }
       );
 
       const data = await response.json();
 
-      if (data.code === 200) {
+      if (response.ok && data.code === 200) { // Added response.ok check
         console.log("User registered successfully!", data);
-        // Redirect to login instead of dashboard
         navigate("/login", { state: { message: "Registration successful. Please log in." } });
       } else {
         setError(data.error || "Registration failed. Please try again.");
@@ -81,6 +83,8 @@ const Register = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            padding: 3,
+            borderRadius: 2,
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -115,6 +119,7 @@ const Register = () => {
                   id="email"
                   label="Email Address"
                   name="email"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -129,6 +134,7 @@ const Register = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  helperText="At least 8 characters, one uppercase letter, and one symbol."
                 />
               </Grid>
               <Grid item xs={12}>
