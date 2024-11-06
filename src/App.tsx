@@ -6,7 +6,9 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import StockDetails from './pages/StockDetails';
+=======
 import './App.css';
+import Analysis from './pages/Analysis';
 
 const App: React.FC = () => {
   return (
