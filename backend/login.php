@@ -1,18 +1,27 @@
 <?php
-// backend/login.php
-
 session_start();
+
+if (empty($_SESSION['csrf_token'])) {
+    // Generate a secret token when needed on page & one has not yet existed
+    $_SESSION['csrf_token']= bin2hex(random_bytes(32));
+    }
+
+if (empty($_POST['csrf_token']) ||
+    !hash_equals($_SESSION['csrf_token'],
+    $_POST['csrf_token'])) {
+    http_response_code(401);
+    echo('Fail');
+    exit();
+    }
+
 include_once('db.php');
 
-// header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-// Removed HTTPS enforcement to allow HTTP connections during local development
-/*
 if(
     (!isset($_SERVER['HTTPS'])||
     ($_SERVER['HTTPS']!='on')))
@@ -22,7 +31,6 @@ if(
     $_SERVER['SERVER_NAME'].
     $_SERVER['PHP_SELF']);
     }
-*/
 
 // if user is already logged in
 if (isset($_SESSION["user"])) {
@@ -30,16 +38,18 @@ if (isset($_SESSION["user"])) {
 }
 
 if (isset($_POST["login"])) {
-    if (!isset($_POST["email"]) || empty($_POST["email"])) {
+
+    $email = htmlspecialchars($_POST["email"] ?? '');
+    $password = htmlspecialchars($_POST["password"] ?? '');
+    
+    if (!isset($email) || empty($email)) {
         die(json_encode(['error' => 'Email is required']));
     }
-    $email = $_POST["email"];
-    $password = $_POST["password"];
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die(json_encode(['error' => 'Invalid email format']));
     }
 
-    // Prepare statement to prevent SQL injection
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     if (!$stmt) {
         die(json_encode(["code" => 500, "error" => "Server error"]));

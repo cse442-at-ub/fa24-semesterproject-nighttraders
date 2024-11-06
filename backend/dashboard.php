@@ -1,6 +1,9 @@
 <?php
-// Enable CORS for local testing if needed
-header('Access-Control-Allow-Origin: http://localhost:3000');
+// backend-stocksAPI/dashboard.php or backend-monte/dashboard.php
+include_once('config.php'); // Add this line first
+
+
+header('Access-Control-Allow-Origin: ' . FRONTEND_URL);
 header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
