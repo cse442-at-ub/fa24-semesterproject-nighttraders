@@ -1,11 +1,23 @@
 <?php
 session_start();
+if (empty($_POST['csrf_token']) ||
+    !hash_equals($_SESSION['csrf_token'],
+    $_POST['csrf_token'])) {
+    http_response_code(401);
+    echo('Fail');
+    exit();
+    }
 
 header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
+
+// generate CSRF token if it doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 include_once('db.php');
 
