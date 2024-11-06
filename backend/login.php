@@ -1,18 +1,14 @@
 <?php
-// backend/login.php
 
 session_start();
 include_once('db.php');
 
-// header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-// Removed HTTPS enforcement to allow HTTP connections during local development
-/*
 if(
     (!isset($_SERVER['HTTPS'])||
     ($_SERVER['HTTPS']!='on')))
@@ -22,7 +18,6 @@ if(
     $_SERVER['SERVER_NAME'].
     $_SERVER['PHP_SELF']);
     }
-*/
 
 // if user is already logged in
 if (isset($_SESSION["user"])) {
@@ -39,7 +34,6 @@ if (isset($_POST["login"])) {
         die(json_encode(['error' => 'Invalid email format']));
     }
 
-    // Prepare statement to prevent SQL injection
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     if (!$stmt) {
         die(json_encode(["code" => 500, "error" => "Server error"]));

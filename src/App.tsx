@@ -8,7 +8,10 @@ import Landing from './pages/Landing';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import MonteCarlo from "./pages/Analysis";
+
 import './App.css';
+import Analysis from './pages/Analysis';
 
 const App: React.FC = () => {
   return (
@@ -18,7 +21,9 @@ const App: React.FC = () => {
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />}/> 
+          <Route path="/analysis" element={<Analysis />} />
+
         </Routes>
     </Router>
   );
