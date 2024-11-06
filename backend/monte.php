@@ -114,16 +114,25 @@ function calculateMonteCarlo($timeSeries, $iterations = 1000, $days = 30) {
         $scenarios[] = $path;
     }
 
-    // Analyze results
-    $finalPrices = array_map(function($path) {
-        return end($path);
-    }, $scenarios);
+    // Sort scenarios by their final price
+    usort($scenarios, function($a, $b) {
+        return end($a) <=> end($b);
+    });
+
+    // Extract best case, worst case, and median case
+    $worstCase = $scenarios[0];                             // Lowest final price
+    $bestCase = $scenarios[count($scenarios) - 1];           // Highest final price
+    $medianCase = $scenarios[(int) (count($scenarios) / 2)]; // Median final price
 
     return [
-        'worst' => min($finalPrices),
-        'average' => array_sum($finalPrices) / count($finalPrices),
-        'best' => max($finalPrices),
-        'scenarios' => $scenarios
+        'worst' => end($worstCase),
+        'average' => array_sum(array_map('end', $scenarios)) / count($scenarios),
+        'best' => end($bestCase),
+        'scenarios' => [
+            'worstCase' => $worstCase,
+            'medianCase' => $medianCase,
+            'bestCase' => $bestCase
+        ]
     ];
 }
 
