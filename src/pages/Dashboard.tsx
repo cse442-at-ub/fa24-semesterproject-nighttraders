@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
         setError(error);
         setLoading(false);
       });
-  }, []);
+   }, []);
 
   if (loading) {
     return <div className="App">Loading...</div>;
