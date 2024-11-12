@@ -1,19 +1,6 @@
 <?php
 session_start();
 
-if (empty($_SESSION['csrf_token'])) {
-    // Generate a secret token when needed on page & one has not yet existed
-    $_SESSION['csrf_token']= bin2hex(random_bytes(32));
-    }
-
-if (empty($_POST['csrf_token']) ||
-    !hash_equals($_SESSION['csrf_token'],
-    $_POST['csrf_token'])) {
-    http_response_code(401);
-    echo('Fail');
-    exit();
-    }
-
 include_once('db.php');
 
 header('Access-Control-Allow-Origin: https://se-prod.cse.buffalo.edu');

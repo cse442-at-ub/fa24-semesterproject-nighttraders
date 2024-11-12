@@ -1,7 +1,6 @@
 <?php
 // backend-stocksAPI/db.php or backend-monte/db.php
 
-=======
 include_once('config.php');
 
 // Create connection
