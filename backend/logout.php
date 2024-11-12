@@ -7,7 +7,6 @@ session_start();
 session_destroy();
 
 header('Access-Control-Allow-Origin: ' . FRONTEND_URL);
-=======
 header('Access-Control-Allow-Credentials: true');
 header("Content-Type: application/json");
 
