@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { config } from '../config';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, CircularProgress } from '@mui/material';
+import { Box, Typography, Button, CircularProgress, IconButton } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -15,6 +15,7 @@ import {
     Legend,
     ChartData
 } from 'chart.js';
+import { Bookmark, BookmarkBorder } from '@mui/icons-material';
 
 ChartJS.register(
     CategoryScale,
@@ -33,6 +34,7 @@ const StockDetails: React.FC = () => {
     const [error, setError] = useState<string>('');
     const [chartData, setChartData] = useState<any>(null);
     const [monteCarloData, setMonteCarloData] = useState<any>(null);
+    const [isOwned, setIsOwned] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -71,6 +73,25 @@ const StockDetails: React.FC = () => {
             }
         };
         fetchStockDetails();
+    }, [symbol]);
+
+    useEffect(() => {
+        const checkIfOwned = async () => {
+            try {
+                const response = await fetch(`${config.backendUrl}/getOwnedStocks.php`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.error) {
+                    console.error(data.error);
+                } else {
+                    setIsOwned(data.OwnedStocks.includes(symbol));
+                }
+            } catch (err) {
+                console.error('Failed to fetch owned stocks', err);
+            }
+        };
+        checkIfOwned();
     }, [symbol]);
 
     const handleRunMonteCarlo = async () => {
@@ -125,13 +146,26 @@ const StockDetails: React.FC = () => {
         }
     };
 
-    const getRandomColor = () => {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
+    const handleToggleOwned = async () => {
+        const action = isOwned ? 'remove' : 'add';
+        try {
+            const response = await fetch(`${config.backendUrl}/updateOwnedStocks.php`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ symbol, action }),
+            });
+            const data = await response.json();
+            if (data.error) {
+                console.error(data.error);
+            } else {
+                setIsOwned(!isOwned);
+            }
+        } catch (err) {
+            console.error('Failed to update owned stocks', err);
         }
-        return color;
     };
 
     return (
@@ -155,6 +189,12 @@ const StockDetails: React.FC = () => {
                     </Typography>
                 ) : (
                     <>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="h4">{stockInfo.Name} ({stockInfo.Symbol})</Typography>
+                            <IconButton onClick={handleToggleOwned} sx={{ color: 'white' }}>
+                                {isOwned ? <Bookmark /> : <BookmarkBorder />}
+                            </IconButton>
+                        </Box>
                         {chartData && (
                             <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 2 }}>
                                 <Line data={chartData} />
