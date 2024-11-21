@@ -24,14 +24,15 @@ if (!isset($_SESSION['user'])) {
 
 $username = $_SESSION['user'];
 $input = json_decode(file_get_contents('php://input'), true);
-if (!$input || !isset($input['symbol']) || !isset($input['action'])) {
+
+if (!$input || !isset($input['symbol']) || !isset($input['quantity'])) {
     http_response_code(400); // Bad Request
     echo json_encode(['error' => 'Invalid input']);
     exit;
 }
 
 $symbol = $input['symbol'];
-$action = $input['action']; // 'add' or 'remove'
+$quantity = (int)$input['quantity'];
 
 // Fetch current OwnedStocks for the user
 $stmt = $conn->prepare('SELECT OwnedStocks FROM users WHERE username = ?');
@@ -49,21 +50,27 @@ if (!$user) {
 
 $ownedStocks = $user['OwnedStocks'] ? json_decode($user['OwnedStocks'], true) : [];
 
-if ($action === 'add') {
-    // Add the stock to OwnedStocks if not already present
-    if (!in_array($symbol, $ownedStocks)) {
-        $ownedStocks[] = $symbol;
+// Update the quantity for the symbol
+$found = false;
+foreach ($ownedStocks as &$stock) {
+    if ($stock['symbol'] === $symbol) {
+        $stock['quantity'] = $quantity;
+        $found = true;
+        break;
     }
-} elseif ($action === 'remove') {
-    // Remove the stock from OwnedStocks
-    $ownedStocks = array_filter($ownedStocks, function($s) use ($symbol) {
-        return $s !== $symbol;
-    });
-} else {
-    http_response_code(400); // Bad Request
-    echo json_encode(['error' => 'Invalid action']);
-    exit;
 }
+
+if (!$found) {
+    // If stock not in list, add it
+    $ownedStocks[] = ['symbol' => $symbol, 'quantity' => $quantity];
+}
+
+// **Remove this section to allow quantity = 0 stocks to remain**
+// // Remove stocks with zero quantity
+// $ownedStocks = array_filter($ownedStocks, function($stock) {
+//     return $stock['quantity'] > 0;
+// });
+
 
 // Update the OwnedStocks field in the database
 $ownedStocksJson = json_encode(array_values($ownedStocks)); // Re-index array
