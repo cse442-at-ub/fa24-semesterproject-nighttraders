@@ -42,7 +42,7 @@ const StockGraph: React.FC<StockGraphProps> = ({ stocks }) => {
                 label: stock.stockInfo.Symbol,
                 data: timeSeriesData,
                 borderColor: getRandomColor(),
-                backgroundColor: getRandomColor(),
+                backgroundColor: 'transparent',
                 fill: false,
                 tension: 0.1
             };
@@ -69,7 +69,7 @@ const StockGraph: React.FC<StockGraphProps> = ({ stocks }) => {
             },
             title: {
                 display: true,
-                text: 'Stock Price Predictions'
+                text: 'Portfolio Monte Carlo Simulation'
             }
         },
         scales: {

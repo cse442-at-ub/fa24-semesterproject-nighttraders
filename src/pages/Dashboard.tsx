@@ -1,7 +1,19 @@
 // src/pages/Dashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { config } from '../config';
-import { Grid, CircularProgress, Typography, Box, Card, CardContent, CardActionArea, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import {
+    Grid,
+    CircularProgress,
+    Typography,
+    Box,
+    Card,
+    CardContent,
+    CardActionArea,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
@@ -43,6 +55,7 @@ const Dashboard: React.FC = () => {
                 setLoading(false);
             }
         };
+
         const fetchOwnedStocks = async () => {
             try {
                 const response = await fetch(`${config.backendUrl}/getOwnedStocks.php`, {
@@ -52,12 +65,17 @@ const Dashboard: React.FC = () => {
                 if (data.error) {
                     console.error(data.error);
                 } else {
-                    setOwnedStocks(data.OwnedStocks);
+                    // Extract symbols with quantity > 0
+                    const ownedSymbols = data.OwnedStocks
+                        .filter((stock: any) => stock.quantity > 0)
+                        .map((stock: any) => stock.symbol);
+                    setOwnedStocks(ownedSymbols);
                 }
             } catch (err) {
                 console.error('Failed to fetch owned stocks', err);
             }
         };
+
         fetchStocks();
         fetchOwnedStocks();
     }, []);
@@ -81,12 +99,17 @@ const Dashboard: React.FC = () => {
     return (
         <div className="App">
             <div className="top-bar">
-                <Typography variant="h6" component="div">
-                    NightTraders Dashboard
-                </Typography>
-                <button className="logout-button" onClick={handleLogout}>
-                    Logout
+                <button className="logo" onClick={() => navigate("/dashboard")}>
+                    NightTraders
                 </button>
+                <div>
+                    <button className="portfolio-button" onClick={() => navigate("/portfolio")}>
+                        PORTFOLIO
+                    </button>
+                    <button className="logout-button" onClick={handleLogout}>
+                        LOGOUT
+                    </button>
+                </div>
             </div>
             <Box sx={{ p: 3, backgroundColor: '#252525', minHeight: '100vh' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -96,7 +119,12 @@ const Dashboard: React.FC = () => {
                             value={filter}
                             onChange={handleFilterChange}
                             label="Filter"
-                            sx={{ color: 'white', '.MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
+                            sx={{
+                                color: 'white',
+                                '.MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+                                '.MuiSvgIcon-root': { color: 'white' },
+                            }}
                         >
                             <MenuItem value="all">All Stocks</MenuItem>
                             <MenuItem value="owned">Owned Stocks</MenuItem>
@@ -113,28 +141,36 @@ const Dashboard: React.FC = () => {
                     </Typography>
                 ) : (
                     <Grid container spacing={2}>
-                        {filteredStocks.map((stock, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={index}>
-                                <Card sx={{ height: '100%', backgroundColor: 'white' }}>
-                                    <CardActionArea onClick={() => handleStockClick(stock.Symbol)}>
-                                        <CardContent>
-                                            <Typography variant="h6" component="div" gutterBottom>
-                                                {stock.Symbol}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {stock.Name}
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                Exchange: {stock.Exchange}
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                Sector: {stock.Sector}
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
+                        {filteredStocks.length === 0 ? (
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" color="white">
+                                    No stocks match the selected filter.
+                                </Typography>
                             </Grid>
-                        ))}
+                        ) : (
+                            filteredStocks.map((stock, index) => (
+                                <Grid item xs={12} sm={6} md={4} key={index}>
+                                    <Card sx={{ height: '100%', backgroundColor: 'white' }}>
+                                        <CardActionArea onClick={() => handleStockClick(stock.Symbol)}>
+                                            <CardContent>
+                                                <Typography variant="h6" component="div" gutterBottom>
+                                                    {stock.Symbol}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {stock.Name}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    Exchange: {stock.Exchange}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    Sector: {stock.Sector}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
+                                </Grid>
+                            ))
+                        )}
                     </Grid>
                 )}
             </Box>

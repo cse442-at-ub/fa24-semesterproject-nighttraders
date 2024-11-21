@@ -33,5 +33,16 @@ if (!$user) {
 
 $ownedStocks = $user['OwnedStocks'] ? json_decode($user['OwnedStocks'], true) : [];
 
-echo json_encode(['OwnedStocks' => $ownedStocks]);
+// Ensure OwnedStocks is an array of objects with 'symbol' and 'quantity'
+$formattedStocks = [];
+foreach ($ownedStocks as $stock) {
+    if (is_array($stock) && isset($stock['symbol']) && isset($stock['quantity'])) {
+        $formattedStocks[] = [
+            'symbol' => $stock['symbol'],
+            'quantity' => (int)$stock['quantity']
+        ];
+    }
+}
+
+echo json_encode(['OwnedStocks' => $formattedStocks]);
 ?>
