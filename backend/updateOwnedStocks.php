@@ -25,7 +25,7 @@ if (!isset($_SESSION['user'])) {
 $username = $_SESSION['user'];
 $input = json_decode(file_get_contents('php://input'), true);
 
-if (!$input || !isset($input['symbol']) || !isset($input['quantity'])) {
+if (!$input || !isset($input['symbol']) || !isset($input['quantity']) || !isset($input['price'])) {
     http_response_code(400); // Bad Request
     echo json_encode(['error' => 'Invalid input']);
     exit;
@@ -33,6 +33,7 @@ if (!$input || !isset($input['symbol']) || !isset($input['quantity'])) {
 
 $symbol = $input['symbol'];
 $quantity = (int)$input['quantity'];
+$price = (int)$input['price'];
 
 // Fetch current OwnedStocks for the user
 $stmt = $conn->prepare('SELECT OwnedStocks FROM users WHERE username = ?');
@@ -55,14 +56,19 @@ $found = false;
 foreach ($ownedStocks as &$stock) {
     if ($stock['symbol'] === $symbol) {
         $stock['quantity'] = $quantity;
+        $stock['price'] = $price;
         $found = true;
         break;
     }
 }
 
-if (!$found) {
-    // If stock not in list, add it
-    $ownedStocks[] = ['symbol' => $symbol, 'quantity' => $quantity];
+// if (!$found) {
+//     // If stock not in list, add it
+//     $ownedStocks[] = ['symbol' => $symbol, 'quantity' => $quantity];
+// }
+if (!$found && $quantity > 0) {
+    // If stock not in list and quantity is greater than zero, add it
+    $ownedStocks[] = ['symbol' => $symbol, 'quantity' => $quantity, 'price' => $price];
 }
 
 // **Remove this section to allow quantity = 0 stocks to remain**
@@ -71,9 +77,8 @@ if (!$found) {
 //     return $stock['quantity'] > 0;
 // });
 
-
 // Update the OwnedStocks field in the database
-$ownedStocksJson = json_encode(array_values($ownedStocks)); // Re-index array
+$ownedStocksJson = json_encode($ownedStocks);
 $stmt = $conn->prepare('UPDATE users SET OwnedStocks = ? WHERE username = ?');
 $stmt->bind_param('ss', $ownedStocksJson, $username);
 if ($stmt->execute()) {

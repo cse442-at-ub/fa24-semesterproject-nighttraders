@@ -1,7 +1,7 @@
 {
   "name": "night-traders",
   "version": "0.1.0",
-  "homepage": "https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/dlincogn/",
+  "homepage": "https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/ghesarph/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
