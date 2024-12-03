@@ -8,8 +8,10 @@
 
 // Base URLs
 define('BASE_URL', 'https://se-dev.cse.buffalo.edu');
+
 define('FRONTEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/roybrand/');
 define('BACKEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/roybrand/backend/');
+
 
 // Database configuration
 define('API_KEY', 'OC18QBU4BLSDMQKA');

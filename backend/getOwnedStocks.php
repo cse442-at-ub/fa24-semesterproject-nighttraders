@@ -33,13 +33,14 @@ if (!$user) {
 
 $ownedStocks = $user['OwnedStocks'] ? json_decode($user['OwnedStocks'], true) : [];
 
-// Ensure OwnedStocks is an array of objects with 'symbol' and 'quantity'
+// Ensure OwnedStocks is an array of objects with 'symbol', 'quantity', and 'price'
 $formattedStocks = [];
 foreach ($ownedStocks as $stock) {
-    if (is_array($stock) && isset($stock['symbol']) && isset($stock['quantity'])) {
+    if (is_array($stock) && isset($stock['symbol']) && isset($stock['quantity']) && isset($stock['price'])) {
         $formattedStocks[] = [
             'symbol' => $stock['symbol'],
-            'quantity' => (int)$stock['quantity']
+            'quantity' => (int)$stock['quantity'],
+            'price' => (int)$stock['price']
         ];
     }
 }
