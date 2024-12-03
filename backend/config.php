@@ -8,15 +8,17 @@
 
 // Base URLs
 define('BASE_URL', 'https://se-dev.cse.buffalo.edu');
-define('FRONTEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/ghesarph/');
-define('BACKEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/ghesarph/backend/');
+
+define('FRONTEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/roybrand/');
+define('BACKEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/roybrand/backend/');
+
 
 // Database configuration
 define('API_KEY', 'OC18QBU4BLSDMQKA');
 define('SERVER_NAME', 'localhost');
-define('DB_USER', 'ghesarph');
-define('DB_PASS', '50449182');
-define('DB_NAME', 'ghesarph_db');
+define('DB_USER', 'roybrand');
+define('DB_PASS', '50210828');
+define('DB_NAME', 'roybrand_db');
 
 
 
