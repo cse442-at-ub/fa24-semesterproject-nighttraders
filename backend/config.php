@@ -8,15 +8,15 @@
 
 // Base URLs
 define('BASE_URL', 'https://se-dev.cse.buffalo.edu');
-define('FRONTEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/dlincogn/');
-define('BACKEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/dlincogn/backend/');
+define('FRONTEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/roybrand/');
+define('BACKEND_URL', 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/roybrand/backend/');
 
 // Database configuration
 define('API_KEY', 'OC18QBU4BLSDMQKA');
 define('SERVER_NAME', 'localhost');
-define('DB_USER', 'dlincogn');
-define('DB_PASS', '50503958');
-define('DB_NAME', 'dlincogn_db');
+define('DB_USER', 'roybrand');
+define('DB_PASS', '50210828');
+define('DB_NAME', 'roybrand_db');
 
 
 
