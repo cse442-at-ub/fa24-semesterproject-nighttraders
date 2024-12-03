@@ -65,6 +65,7 @@ const StockGraph: React.FC<StockGraphProps> = ({ stocks }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Allow the chart to fill the container's height
     plugins: {
       legend: {
         position: "top" as const,
@@ -87,7 +88,10 @@ const StockGraph: React.FC<StockGraphProps> = ({ stocks }) => {
         backgroundColor: "white",
         p: 2,
         borderRadius: 2,
-        height: "400px",
+        height: "400px", // Initial fixed height
+        maxWidth: "800px",
+        width: "100%",
+        mx: "auto",
       }}
     >
       <Line data={data} options={options} />

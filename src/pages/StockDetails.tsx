@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   CircularProgress,
-  IconButton,
 } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import {
@@ -141,7 +140,7 @@ const StockDetails: React.FC = () => {
   };
 
   const handleToggleOwned = async () => {
-    // Toggle between added and removed
+    // Toggle between adding and removing the stock from the portfolio
     const newQuantity = isOwned ? 0 : 1; // Set to 1 when bookmarking
 
     try {
@@ -222,15 +221,51 @@ const StockDetails: React.FC = () => {
               <Typography variant="h4" sx={{ mr: 2 }}>
                 {stockInfo.Name} ({stockInfo.Symbol})
               </Typography>
-              <IconButton onClick={handleToggleOwned} sx={{ color: "white" }}>
-                {isOwned ? <AddCircleIcon /> : <AddCircleOutlineIcon />}
-              </IconButton>
+              {/* Updated Button with Icon and Text */}
+              <Button
+                onClick={handleToggleOwned}
+                variant="contained"
+                color={isOwned ? "success" : "primary"}
+                startIcon={isOwned ? <AddCircleIcon /> : <AddCircleOutlineIcon />}
+                sx={{ ml: 2 }}
+              >
+                {isOwned ? "Owned" : "Add to Portfolio"}
+              </Button>
             </Box>
             {chartData && (
               <Box
-                sx={{ backgroundColor: "white", p: 2, borderRadius: 2, mt: 2 }}
+                sx={{
+                  backgroundColor: "white",
+                  p: 2,
+                  borderRadius: 2,
+                  mt: 2,
+                  width: "95%",
+                  maxWidth: "1400px",
+                  height: { xs: 300, sm: 400 },
+                  mx: "auto",
+                }}
               >
-                <Line data={chartData} />
+                <Line
+                  data={chartData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: "top" as const,
+                      },
+                      title: {
+                        display: true,
+                        text: "Stock Closing Prices",
+                      },
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: false,
+                      },
+                    },
+                  }}
+                />
               </Box>
             )}
             <Button
@@ -245,11 +280,17 @@ const StockDetails: React.FC = () => {
             monteCarloData.scenarios.worstCase &&
             Array.isArray(monteCarloData.scenarios.worstCase) ? (
               <Box
-                sx={{ backgroundColor: "white", p: 2, borderRadius: 2, mt: 2 }}
+                sx={{
+                  backgroundColor: "white",
+                  p: 2,
+                  borderRadius: 2,
+                  mt: 2,
+                  maxWidth: "1400px",
+                  width: "95%",
+                  height: { xs: 300, sm: 400 },
+                  mx: "auto",
+                }}
               >
-                <Typography variant="h5" sx={{ mb: 2 }}>
-                  Monte-Carlo Simulation Results:
-                </Typography>
                 <Line
                   data={{
                     labels: Array.from(
@@ -282,6 +323,7 @@ const StockDetails: React.FC = () => {
                   }}
                   options={{
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                       legend: {
                         position: "top" as const,
