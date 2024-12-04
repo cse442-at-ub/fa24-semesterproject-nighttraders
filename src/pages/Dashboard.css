@@ -5,7 +5,7 @@
 }
 
 .top-bar {
-  background-color: #79747e;
+  background-color: #79747E;
   color: white;
   padding: 10px;
   display: flex;
@@ -23,9 +23,8 @@
   cursor: pointer;
   border-radius: 5px;
 }
-
 .portfolio-button,
-.logout-button {
+.logout-button, .Landing-button, .settings-button, .dashboard-button{
   background-color: transparent;
   color: #252525;
   border: none;
@@ -37,6 +36,6 @@
 }
 
 .portfolio-button:hover,
-.logout-button:hover {
+.logout-button:hover, .Landing-button:hover, .settings-button:hover, .dashboard-button:hover {
   color: #333333;
 }
