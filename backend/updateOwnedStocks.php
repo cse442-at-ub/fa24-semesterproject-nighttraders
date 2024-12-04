@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // backend/updateOwnedStocks.php
 include_once('db.php');
 include_once('config.php');
@@ -8,7 +10,6 @@ header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST');
 
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405); // Method Not Allowed

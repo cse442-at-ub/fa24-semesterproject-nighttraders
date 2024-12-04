@@ -35,20 +35,19 @@ const Login = () => {
       formData.append("password", password);
       formData.append("login", "true");
 
-      const response = await fetch(
-        `${config.backendUrl}/login.php`,
-        {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${config.backendUrl}/login.php`, {
+        method: "POST",
+        body: formData,
+        credentials: "include", // Include cookies for session management
+      });
 
       const data = await response.json();
 
-      if (response.ok && data.code === 200) { // Added response.ok check
+      if (response.ok && data.code === 200 && data.message === "Login successful") {
         console.log("Login successful!", data);
         navigate("/dashboard");
+      } else if (data.message === "Already logged in") {
+        setErrorMessage("You are already logged in. Please log out first.");
       } else {
         setErrorMessage(
           data.error || "Invalid email or password. Please try again."
@@ -100,7 +99,7 @@ const Login = () => {
             </Typography>
           )}
           {errorMessage && (
-            <Typography color="error" variant="body2">
+            <Typography color="error" variant="body2" sx={{ mt: 2 }}>
               {errorMessage}
             </Typography>
           )}

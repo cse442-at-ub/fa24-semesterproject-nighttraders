@@ -1,4 +1,8 @@
 <?php
+// Start session to check if user is logged in
+session_start();
+
+
 include_once('config.php');  // Configuration settings
 include_once('db.php');       // Database connection
 include_once('getStocks.php'); // Include getStocks functions
@@ -8,8 +12,6 @@ header('Access-Control-Allow-Origin: ' . FRONTEND_URL);
 header('Access-Control-Allow-Credentials: true');
 header("Content-Type: application/json");
 
-// Start session to check if user is logged in
-session_start();
 
 if (!isset($_SESSION["user"])) {
     http_response_code(401); // Unauthorized

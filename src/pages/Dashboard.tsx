@@ -1,4 +1,5 @@
 // src/pages/Dashboard.tsx
+
 import React, { useState, useEffect } from "react";
 import { config } from "../config";
 import {
@@ -15,83 +16,125 @@ import {
   InputLabel,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import "./Dashboard.css";
+import "./Dashboard.css"; // Ensure CSS is correctly applied
 
 const Dashboard: React.FC = () => {
   const [stocks, setStocks] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const navigate = useNavigate();
   const [filter, setFilter] = useState<string>("all"); // 'all' or 'owned'
   const [ownedStocks, setOwnedStocks] = useState<string[]>([]);
+  const navigate = useNavigate();
 
+  /**
+   * Handles user logout by making a request to the backend logout endpoint.
+   * Upon successful logout, it clears frontend state and redirects to the landing page.
+   */
   const handleLogout = async () => {
     try {
-      await fetch(`${config.backendUrl}/logout.php`, {
-        credentials: "include",
+      const response = await fetch(`${config.backendUrl}/logout.php`, {
+        credentials: "include", // Ensure cookies are sent
       });
-      navigate("/");
+      const data = await response.json();
+      if (response.ok && data.code === 200) {
+        // Clear frontend state to prevent residual data
+        setStocks([]);
+        setOwnedStocks([]);
+        setFilter("all");
+        // Redirect to landing page
+        navigate("/");
+      } else {
+        console.error("Logout failed:", data.message);
+        alert("Logout failed. Please try again.");
+      }
     } catch (error) {
       console.error("Logout error:", error);
+      alert("An unexpected error occurred during logout.");
     }
   };
 
+  /**
+   * Fetches all available stocks from the backend.
+   */
+  const fetchStocks = async () => {
+    try {
+      const response = await fetch(`${config.backendUrl}/getAllStocks.php`, {
+        credentials: "include", // Ensure cookies are sent
+      });
+      const data = await response.json();
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setStocks(data.stocks);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch stock data.");
+    }
+  };
+
+  /**
+   * Fetches the owned stocks for the current user from the backend.
+   */
+  const fetchOwnedStocks = async () => {
+    try {
+      const response = await fetch(`${config.backendUrl}/getOwnedStocks.php`, {
+        credentials: "include", // Ensure cookies are sent
+      });
+      const data = await response.json();
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        // Extract symbols with quantity > 0
+        const ownedSymbols = data.OwnedStocks.filter(
+          (stock: any) => stock.quantity > 0
+        ).map((stock: any) => stock.symbol);
+        setOwnedStocks(ownedSymbols);
+      }
+    } catch (err) {
+      console.error("Failed to fetch owned stocks", err);
+    }
+  };
+
+  /**
+   * Fetches both all stocks and owned stocks concurrently.
+   */
+  const fetchData = async () => {
+    setLoading(true);
+    setError("");
+    await Promise.all([fetchStocks(), fetchOwnedStocks()]);
+    setLoading(false);
+  };
+
+  /**
+   * useEffect hook to fetch data when the component mounts.
+   */
   useEffect(() => {
-    const fetchStocks = async () => {
-      try {
-        const response = await fetch(`${config.backendUrl}/getAllStocks.php`, {
-          credentials: "include",
-        });
-        const data = await response.json();
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setStocks(data.stocks);
-        }
-      } catch (err) {
-        console.error(err);
-        setError("Failed to fetch stock data.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array ensures this runs once on mount
 
-    const fetchOwnedStocks = async () => {
-      try {
-        const response = await fetch(
-          `${config.backendUrl}/getOwnedStocks.php`,
-          {
-            credentials: "include",
-          }
-        );
-        const data = await response.json();
-        if (data.error) {
-          console.error(data.error);
-        } else {
-          // Extract symbols with quantity > 0
-          const ownedSymbols = data.OwnedStocks.filter(
-            (stock: any) => stock.quantity > 0
-          ).map((stock: any) => stock.symbol);
-          setOwnedStocks(ownedSymbols);
-        }
-      } catch (err) {
-        console.error("Failed to fetch owned stocks", err);
-      }
-    };
-
-    fetchStocks();
-    fetchOwnedStocks();
-  }, []);
-
+  /**
+   * Handles navigation to the stock details page when a stock card is clicked.
+   * @param symbol - The stock symbol to navigate to.
+   */
   const handleStockClick = (symbol: string) => {
     navigate(`/stock/${symbol}`);
   };
 
+  /**
+   * Handles changes in the filter dropdown.
+   * @param event - The change event from the Select component.
+   */
   const handleFilterChange = (event: any) => {
     setFilter(event.target.value);
   };
 
-  // Filter stocks based on selected filter
+  /**
+   * Filters the stocks based on the selected filter.
+   * - "all": Shows all stocks.
+   * - "owned": Shows only the stocks owned by the user.
+   */
   const filteredStocks = stocks.filter((stock) => {
     if (filter === "owned") {
       return ownedStocks.includes(stock.Symbol);
@@ -101,6 +144,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="App">
+      {/* Top Navigation Bar */}
       <div className="top-bar">
         <button className="logo" onClick={() => navigate("/dashboard")}>
           NightTraders
@@ -117,7 +161,10 @@ const Dashboard: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Main Content Area */}
       <Box sx={{ p: 3, backgroundColor: "#252525", minHeight: "100vh" }}>
+        {/* Filter Dropdown */}
         <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
           <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
             <InputLabel sx={{ color: "white" }}>Filter</InputLabel>
@@ -139,6 +186,8 @@ const Dashboard: React.FC = () => {
             </Select>
           </FormControl>
         </Box>
+
+        {/* Loading Indicator */}
         {loading ? (
           <Box
             display="flex"
@@ -149,18 +198,22 @@ const Dashboard: React.FC = () => {
             <CircularProgress />
           </Box>
         ) : error ? (
+          /* Error Message */
           <Typography variant="h6" color="error" align="center">
             {error}
           </Typography>
         ) : (
+          /* Stocks Grid */
           <Grid container spacing={2}>
             {filteredStocks.length === 0 ? (
+              /* No Stocks Matching Filter */
               <Grid item xs={12}>
                 <Typography variant="h6" align="center" color="white">
                   No stocks match the selected filter.
                 </Typography>
               </Grid>
             ) : (
+              /* Stock Cards */
               filteredStocks.map((stock, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card sx={{ height: "100%", backgroundColor: "white" }}>

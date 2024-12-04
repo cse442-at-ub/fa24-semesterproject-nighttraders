@@ -1,7 +1,7 @@
 export const config = {
-    baseUrl: 'https://se-dev.cse.buffalo.edu',
-    frontendUrl: 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/dlincogn/',
-    backendUrl: 'https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/dlincogn/backend/'
+    baseUrl: 'https://se-prod.cse.buffalo.edu',
+    frontendUrl: 'https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442e/',
+    backendUrl: 'https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442e/backend'
 };
 
 
