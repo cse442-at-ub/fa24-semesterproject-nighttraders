@@ -78,6 +78,7 @@ function calculateMonteCarlo($iterations = 1000, $days = 252, $ownedStocks) {
 
         // Decode and extract the closing prices
         $prices = array_values(json_decode($stockData['TimeSeries'], true)['Time Series (Daily)']);
+        $prices = array_reverse($prices)
         $closingPrices = [];
 
         foreach ($prices as $dayData) {
