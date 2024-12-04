@@ -1,15 +1,18 @@
 // src/pages/Dashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { config } from '../config';
-import { Grid, CircularProgress, Typography, Box, Card, CardContent, CardActionArea } from '@mui/material';
+import { Grid, CircularProgress, Typography, Box, Card, CardContent, CardActionArea, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
+import './Settings';
 
 const Dashboard: React.FC = () => {
     const [stocks, setStocks] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
     const navigate = useNavigate();
+    const [filter, setFilter] = useState<string>('all'); // 'all' or 'owned'
+    const [ownedStocks, setOwnedStocks] = useState<string[]>([]);
 
     const handleLogout = async () => {
         try {
@@ -41,25 +44,76 @@ const Dashboard: React.FC = () => {
                 setLoading(false);
             }
         };
+        const fetchOwnedStocks = async () => {
+            try {
+                const response = await fetch(`${config.backendUrl}/getOwnedStocks.php`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.error) {
+                    console.error(data.error);
+                } else {
+                    setOwnedStocks(data.OwnedStocks);
+                }
+            } catch (err) {
+                console.error('Failed to fetch owned stocks', err);
+            }
+        };
         fetchStocks();
+        fetchOwnedStocks();
     }, []);
 
     const handleStockClick = (symbol: string) => {
         navigate(`/stock/${symbol}`);
     };
 
+    const handleFilterChange = (event: any) => {
+        setFilter(event.target.value);
+    };
+
+    // Filter stocks based on selected filter
+    const filteredStocks = stocks.filter(stock => {
+        if (filter === 'owned') {
+            return ownedStocks.includes(stock.Symbol);
+        }
+        return true;
+    });
+
     return (
         <div className="App">
             <div className="top-bar">
-                <Typography variant="h6" component="div">
-                    NightTraders Dashboard
-                </Typography>
-                <button className="logout-button" onClick={handleLogout}>
-                    Logout
-                </button>
+            <button className="Landing-button" onClick={() => navigate('/')}>
+                NightTraders
+            </button>
+            <button className="dashboard-button" onClick={() => navigate('/dashboard')}>
+                Dashboard
+            </button>
+            <button className="settings-button" onClick={() => navigate('/Settings')}>
+                SETTINGS
+            </button>
+            <button className="portfolio-button" onClick={() => navigate('/portfolio')}>
+                PORTFOLIO
+            </button>
+            <button className="logout-button" onClick={handleLogout}>                    
+                Logout
+            </button>
             </div>
-
+            
             <Box sx={{ p: 3, backgroundColor: '#252525', minHeight: '100vh' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                    <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
+                        <InputLabel sx={{ color: 'white' }}>Filter</InputLabel>
+                        <Select
+                            value={filter}
+                            onChange={handleFilterChange}
+                            label="Filter"
+                            sx={{ color: 'white', '.MuiOutlinedInput-notchedOutline': { borderColor: 'white' } }}
+                        >
+                            <MenuItem value="all">All Stocks</MenuItem>
+                            <MenuItem value="owned">Owned Stocks</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
                 {loading ? (
                     <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
                         <CircularProgress />
@@ -70,7 +124,7 @@ const Dashboard: React.FC = () => {
                     </Typography>
                 ) : (
                     <Grid container spacing={2}>
-                        {stocks.map((stock, index) => (
+                        {filteredStocks.map((stock, index) => (
                             <Grid item xs={12} sm={6} md={4} key={index}>
                                 <Card sx={{ height: '100%', backgroundColor: 'white' }}>
                                     <CardActionArea onClick={() => handleStockClick(stock.Symbol)}>

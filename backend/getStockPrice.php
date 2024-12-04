@@ -2,7 +2,7 @@
 // Start session to check if user is logged in
 session_start();
 
-// backend/getStockDetails.php
+// backend/getStockPrice.php
 include_once('db.php');
 include_once('config.php');
 
@@ -25,7 +25,7 @@ if (!$symbol) {
 }
 
 // Prepare statement to prevent SQL injection
-$stmt = $conn->prepare("SELECT * FROM stockInfo WHERE Symbol = ?");
+$stmt = $conn->prepare("SELECT AnalystTargetPrice FROM stockInfo WHERE Symbol = ?");
 if (!$stmt) {
     http_response_code(500); // Internal Server Error
     echo json_encode(['error' => 'Server error: ' . $conn->error]);
@@ -38,13 +38,11 @@ $result = $stmt->get_result();
 $stockData = $result->fetch_assoc();
 $stmt->close();
 
-if ($stockData) {
-    // Decode the TimeSeries JSON
-    $stockData['TimeSeries'] = json_decode($stockData['TimeSeries'], true);
-    echo json_encode(['stockInfo' => $stockData]);
+if ($stockData && isset($stockData['AnalystTargetPrice'])) {
+    $price = floatval($stockData['AnalystTargetPrice']);
+    echo json_encode(['price' => $price]);
 } else {
     http_response_code(404); // Not Found
-    echo json_encode(['error' => 'Stock not found']);
+    echo json_encode(['error' => 'Stock not found or price unavailable']);
 }
 ?>
-

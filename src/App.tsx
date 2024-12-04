@@ -6,9 +6,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import StockDetails from './pages/StockDetails';
-=======
+import Portfolio from './pages/Portfolio'; // Import the Portfolio page
 import './App.css';
-import Analysis from './pages/Analysis';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +18,7 @@ const App: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/portfolio" element={<Portfolio />} /> {/* Added Portfolio route */}
           <Route path="/stock/:symbol" element={<StockDetails />} />
         </Routes>
     </Router>

@@ -1,7 +1,8 @@
-/* src/pages/Dashboard.css */
-.App {
+/* src/pages/Portfolio.css */
+.portfolio-container {
   min-height: 100vh;
   background-color: #252525;
+  color: white;
 }
 
 .top-bar {
@@ -23,8 +24,9 @@
   cursor: pointer;
   border-radius: 5px;
 }
-.portfolio-button,
-.logout-button, .Landing-button, .settings-button, .dashboard-button{
+
+.dashboard-button,
+.logout-button {
   background-color: transparent;
   color: #252525;
   border: none;
@@ -35,7 +37,7 @@
   border-radius: 5px;
 }
 
-.portfolio-button:hover,
-.logout-button:hover, .Landing-button:hover, .settings-button:hover, .dashboard-button:hover {
+.dashboard-button:hover,
+.logout-button:hover {
   color: #333333;
 }

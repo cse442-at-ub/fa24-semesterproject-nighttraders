@@ -1,4 +1,8 @@
 <?php
+// Start session to check if user is logged in
+session_start();
+
+
 // backend/monte.php
 include_once('config.php');  // Configuration settings
 include_once('db.php');       // Database connection
@@ -9,8 +13,6 @@ header('Access-Control-Allow-Origin: ' . FRONTEND_URL);
 header('Access-Control-Allow-Credentials: true');
 header("Content-Type: application/json");
 
-// Start session to check if user is logged in
-session_start();
 
 if (!isset($_SESSION["user"])) {
     http_response_code(401); // Unauthorized
@@ -79,6 +81,7 @@ function calculateMonteCarlo($timeSeries, $iterations = 1000, $days = 30) {
     }
 
     $prices = array_values($timeSeries['Time Series (Daily)']);
+    $prices = array_reverse($prices);
     $closingPrices = [];
     
     foreach ($prices as $dayData) {
@@ -123,7 +126,31 @@ function calculateMonteCarlo($timeSeries, $iterations = 1000, $days = 30) {
     $worstCase = $scenarios[0];                             // Lowest final price
     $bestCase = $scenarios[count($scenarios) - 1];           // Highest final price
     $medianCase = $scenarios[(int) (count($scenarios) / 2)]; // Median final price
+    $evaluation = '';
 
+    if ($finalValues[$bestIndex] > $currentPrice) {
+        $evaluation .= "The stock performed exceptionally well, with the best case showing a positive growth above the mean.\n";
+    } else {
+        $evaluation .= "The stock showed moderate growth in the best case scenario, but it didn't outperform the mean.\n";
+    }
+
+    if ($finalValues[$worstIndex] < $currentPrice) {
+        $evaluation .= "The worst case reveals that the stock could significantly drop below the mean, showing potential risks.\n";
+    } else {
+        $evaluation .= "The stock showed some stability even in the worst case, not dipping too far below the mean.\n";
+    }
+
+    if ($finalValues[$medianIndex] > $currentPrice) {
+        $evaluation .= "The median case indicates that the stock generally performs above the average, showing positive potential.\n";
+    } else {
+        $evaluation .= "The median case shows that the stock's performance is around the mean, suggesting a stable outlook.\n";
+    }
+    $evaluation .= "\nOverall Evaluation: ";
+    if ($finalValues[$bestIndex] > $finalValues[$worstIndex]) {
+        $evaluation .= "The stock shows potential for positive growth, though it is not without risk.\n";
+    } else {
+        $evaluation .= "The stock presents potential risk, and careful monitoring is needed.\n";
+    }
     return [
         'worst' => end($worstCase),
         'average' => array_sum(array_map('end', $scenarios)) / count($scenarios),
@@ -133,6 +160,7 @@ function calculateMonteCarlo($timeSeries, $iterations = 1000, $days = 30) {
             'medianCase' => $medianCase,
             'bestCase' => $bestCase
         ]
+        'evaluation' => $evaluation
     ];
 }
 
