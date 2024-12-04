@@ -3,6 +3,7 @@
 
 include_once('config.php');
 
+
 // Create connection
 $conn = new mysqli(SERVER_NAME, DB_USER, DB_PASS, DB_NAME);
 
